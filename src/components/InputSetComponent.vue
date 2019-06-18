@@ -8,7 +8,7 @@
 </template>
 
 <script>
-	// 最终版
+	// 最终版 test git command
 	export default ({
 		name:'InputSet',
 		props:['inputCount'],
