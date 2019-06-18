@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <input-set :inputCount="6"></input-set>
+    <!-- <input-set :inputCount="6"></input-set> -->
   </div>
 </template>
 

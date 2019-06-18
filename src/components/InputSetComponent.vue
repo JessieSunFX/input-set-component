@@ -10,6 +10,7 @@
 <script>
 	// 最终版
 	export default ({
+		name:'InputSet',
 		props:['inputCount'],
 		data() {
 			return {
