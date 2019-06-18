@@ -1,9 +1,9 @@
 <template>
 	<div class="input-set">
 		<div class="show-box">
-			<i :class="currentIdx==idx ? 'getFocus' : '' " v-for="(item, idx) in inputList" :key="idx" @click="focusItem(idx)">{{item}}</i>
+			<i :class="{'show-item':true,'get-focus':(currentIdx==idx)}" v-for="(item, idx) in inputList" :key="idx" @click="focusItem(idx)">{{item}}</i>
 		</div>
-		<input type="text" v-model="inputTxt" v-focus="focusStatus" @blur="inputBlurFocus" @keyup="inputKeyUp" @input="inputFun">
+		<input class="input-hidden" type="text" v-model="inputTxt" v-focus="focusStatus" @blur="inputBlurFocus" @keyup="inputKeyUp" @input="inputFun">
 	</div>
 </template>
 
@@ -11,7 +11,11 @@
 	// 最终版
 	export default ({
 		name:'InputSet',
-		props:['inputCount'],
+		props:{
+			inputCount:{
+				default: 4
+			}
+		},
 		data() {
 			return {
 				changeType: -1, 
@@ -49,12 +53,16 @@
 						if (this.currentIdx > 0) {
 							this.currentIdx--;
 							this.$set (this.inputList, this.currentIdx, "");
+							this.noticeParent()
 						}
 					}
 				}
 			},
 			inputFun () {
 				this.changeType = 1;
+			},
+			noticeParent () {
+				this.$emit('inputData',this.inputList)
 			}
 		},
 		directives: {
@@ -80,6 +88,7 @@
 					}
 					if (newVal != oldVal) {
 						this.$set (this.inputList, this.currentIdx, this.inputTxt);
+						this.noticeParent()
 					}
 				
 					if (this.currentIdx < this.inputList.length-1) {
@@ -89,8 +98,10 @@
 					this.inputTxt = "";
 
 					this.$set (this.inputList, this.currentIdx, this.inputTxt);
+					this.noticeParent()
 				} else if (val.length==1 && oldVal.length==0) {
 					this.$set (this.inputList, this.currentIdx, val);
+					this.noticeParent()
 					if(this.keyCodeList.length > 0 && this.changeType == 1){
 						this.keyCodeList.pop();
 					}
@@ -110,6 +121,7 @@
 			for (let i=0; i < this.inputCount; i++) {
 				this.$set (this.inputList, i, "");
 			}
+			this.noticeParent()
 		}
 	})
 	
@@ -124,7 +136,7 @@
 			flex-direction: row;
 			flex-wrap: wrap;
 			justify-content: space-around;
-			i {
+			.show-item {
 				display:block;
 				width: 40px;
 				height: 40px;
@@ -135,11 +147,11 @@
 				border-radius: 5px;
 				font-style: normal;
 			}
-			.getFocus {
+			.get-focus {
 				border-color: #e70012;
 			}
 		}
-		input {
+		.input-hidden {
 			width: 1px;
 			height: 1px;
 			border:0;
